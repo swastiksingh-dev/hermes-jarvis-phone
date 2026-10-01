@@ -1,19 +1,18 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# Start 9Router in its OWN Termux session (Session 1). Low RAM.
-# Usage:  bash ~/hermes-9i/router/start-9router.sh
+# Session 1: real 9Router (https://github.com/decolua/9router, https://9router.com).
+# npm gateway on localhost:20128 with dashboard-managed providers + 3-tier fallback.
+# Usage:  bash ~/hermes-9i/router/start-9router.sh   (leave this session running)
 set -euo pipefail
-cd "$(dirname "$0")"
-if [ -z "${OPENROUTER_API_KEY:-}" ]; then
-  if [ -f "$HOME/.hermes-9i-router-key" ]; then export OPENROUTER_API_KEY="$(cat $HOME/.hermes-9i-router-key)"
-  else
-    echo "Paste OpenRouter key (sk-or-v1-... from https://openrouter.ai/keys):"
-    read -r OPENROUTER_API_KEY
-    echo "$OPENROUTER_API_KEY" > "$HOME/.hermes-9i-router-key"
-    chmod 600 "$HOME/.hermes-9i-router-key"
-  fi
+command -v node >/dev/null 2>&1 || { echo "node missing -> pkg install -y nodejs"; exit 1; }
+if ! command -v 9router >/dev/null 2>&1; then
+  echo "installing 9router (once)..."
+  npm install -g 9router
 fi
-export ROUTER_PORT="${ROUTER_PORT:-4000}"
+export PORT="${PORT:-20128}"
 export NODE_OPTIONS="${NODE_OPTIONS:---dns-result-order=ipv4first}"   # Termux IPv4 DNS fix
 termux-wake-lock 2>/dev/null || true
-echo "[9router] http://127.0.0.1:$ROUTER_PORT/v1  -> Hermes provider: custom"
-python3 hermes-9i-router.py
+echo "dashboard:  http://127.0.0.1:20128/dashboard  (connect providers, build combos, copy API key)"
+echo "endpoint for hermes: http://127.0.0.1:20128/v1  provider: custom"
+echo "note: 9Router is a Next.js app and heavier than a tiny proxy - if the 9i"
+echo "struggles, run it only while Hermes is working, not 24/7."
+exec 9router

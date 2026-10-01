@@ -1,5 +1,11 @@
 # OpenClaw phone-control — primary-source deep dive + gap analysis vs Hermes 9i
 
+> Note (2026-10-01, after this file was written): the router layer described
+> below (`router/hermes-9i-router.py`, port 4000, OpenRouter key) was replaced
+> by the real 9Router (`decolua/9router`, `npm install -g 9router`,
+> `http://127.0.0.1:20128/v1`, dashboard-managed providers). The phone-control
+> findings and gap analysis are unaffected.
+
 Scope: only primary sources. No secondary write-ups were used.
 Date: 2026-10-01.
 

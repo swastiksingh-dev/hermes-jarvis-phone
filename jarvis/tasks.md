@@ -3,7 +3,7 @@
 
 ## Research (loop-safe, low RAM)
 - [ ] Daily tech news digest -> save ~/hermes-9i/logs/research_$(date +%F).md
-- [ ] Research best free OpenRouter models this week, update router/models.txt order
+- [ ] Check 9router dashboard quotas, keep fallback combo healthy (subscription -> cheap -> free)
 
 ## Email via phone-as-user (no Gmail API keys needed — uses Shizuku UI control, no-root)
 - [ ] Open Gmail app, screenshot inbox, summarize unread (phone/phone-actions.sh gmail + screenshot)

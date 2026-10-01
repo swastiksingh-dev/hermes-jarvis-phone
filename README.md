@@ -18,11 +18,12 @@ Full steps are in [SETUP.md](SETUP.md). Short version:
 # 1. install (F-Droid Termux, 5-10 min)
 curl -fsSL https://raw.githubusercontent.com/swastiksingh-dev/hermes-jarvis-phone/main/hermes-9i-install.sh | bash
 
-# 2. router, in a second Termux session
+# 2. 9router, in a second Termux session (leave running)
 bash ~/hermes-9i/router/start-9router.sh
+# dashboard http://127.0.0.1:20128/dashboard -> connect free providers, copy API key
 
 # 3. hermes, in the first session
-hermes setup    # custom endpoint: http://127.0.0.1:4000/v1
+hermes setup    # custom endpoint: http://127.0.0.1:20128/v1
 
 # 4. checks
 bash ~/hermes-9i/phone/shizuku-bridge.sh --check
@@ -36,8 +37,8 @@ Two sessions is the whole design. Session 1 serves free models on localhost. Ses
 | Part | File | What it does |
 |---|---|---|
 | Installer | `hermes-9i-install.sh` | Native Termux setup for 4GB phones. No proot, no Ollama. |
-| Router | `router/hermes-9i-router.py` | Stdlib-only proxy at `127.0.0.1:4000`. Tries your `:free` list in order when OpenRouter rate-limits. |
-| Router config | `router/models.txt` | Fallback chain. Line 1 is primary. |
+| Router | `router/start-9router.sh` | Real 9Router (`decolua/9router`) on `127.0.0.1:20128`. Providers and 3-tier fallback live in its dashboard. |
+| Router models | `router/models.txt` | Suggested free-first IDs and combo layout. |
 | Phone bridge | `phone/shizuku-bridge.sh` | `rish`/`adb` wrapper. Works with Shizuku over wireless debugging, no root. |
 | Phone actions | `phone/phone-actions.sh` | 50+ actions Hermes can call: `ui_dump` + `tap_text` grounding, guardrailed `shell`, youtube, recents, kill-app, whatsapp, device info, and the rest. Screen tasks follow `jarvis/phone-rules.md`. |
 | Remote trigger (optional) | `phone/telegram-watch.sh` | Bot messages append to the task inbox. Needs a `@BotFather` token, no gateway daemon. |

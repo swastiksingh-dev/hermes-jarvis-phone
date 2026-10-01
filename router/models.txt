@@ -1,8 +1,9 @@
-# 9Router fallback chain — cheapest / highest-limit free models first.
-# Lines: <openrouter-id>  # comment. First = primary, rest = fallback on 429/529.
-# Edit to your taste. Keep :free only for zero cost on 9i.
-qwen/qwen3-235b-a22b:free
-deepseek/deepseek-chat-v3.1:free
-google/gemini-2.0-flash-exp:free
-meta-llama/llama-3.3-70b-instruct:free
-mistralai/mistral-small-3.1-24b-instruct:free
+# 9Router model IDs and combos. Connect providers in the dashboard first:
+# http://127.0.0.1:20128/dashboard  (free: Kiro AI ~50 credits/mo, OpenCode Free
+# no-auth, Vertex $300 new-account credits).
+# Suggested free-first combo (build in dashboard: subscription -> cheap -> free):
+#   kr/claude-sonnet-4.5   Claude 4.5 via Kiro free tier
+#   kr/glm-5               GLM-5 via Kiro free tier
+#   oc/<auto>              OpenCode Free, no auth (model list varies)
+# Cheap backups: glm/glm-5.1 ($0.6/1M), minimax/MiniMax-M2.7 ($0.2/1M).
+# Hermes then uses ONE id, e.g. kr/claude-sonnet-4.5 - fallback is 9Router's job.
