@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.hermes-9i-router-key
+hermes-9i/logs/
+hermes-9i/memory/

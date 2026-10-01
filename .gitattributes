@@ -1,0 +1,6 @@
+# keep shell scripts LF on Windows checkouts (Termux breaks on CRLF)
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.yaml text eol=lf

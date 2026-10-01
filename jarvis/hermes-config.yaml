@@ -1,0 +1,17 @@
+# Hermes config for 9i — copy to ~/.hermes/config.yaml (merge with existing)
+# Points Hermes at local 9Router proxy (Session 1) for FREE auto-routing.
+model:
+  default: qwen/qwen3-235b-a22b:free
+  provider: custom
+  base_url: http://127.0.0.1:4000/v1
+  api_key: local-9router
+  context_length: 64000
+
+fallback_model:
+  provider: openrouter
+  model: deepseek/deepseek-chat-v3.1:free
+
+auxiliary:
+  vision: { provider: auto, model: "", timeout: 120 }
+  compression: { timeout: 120 }
+  title_generation: { enabled: true, provider: auto, model: "" }

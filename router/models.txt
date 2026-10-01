@@ -1,0 +1,8 @@
+# 9Router fallback chain — cheapest / highest-limit free models first.
+# Lines: <openrouter-id>  # comment. First = primary, rest = fallback on 429/529.
+# Edit to your taste. Keep :free only for zero cost on 9i.
+qwen/qwen3-235b-a22b:free
+deepseek/deepseek-chat-v3.1:free
+google/gemini-2.0-flash-exp:free
+meta-llama/llama-3.3-70b-instruct:free
+mistralai/mistral-small-3.1-24b-instruct:free
