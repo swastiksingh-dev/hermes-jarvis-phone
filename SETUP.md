@@ -100,4 +100,7 @@ CYCLE_MIN=10 bash ~/hermes-9i/jarvis/jarvis-loop.sh
 | Hermes ignores `base_url` | set `provider: custom` (see `hermes-config.yaml`) |
 | `hermes` OOM / killed | kill proot/Ollama, one hermes at a time, `CYCLE_MIN=10` |
 | Play Store Termux errors | uninstall, reinstall from F-Droid |
+| `pkg` slow or stuck | run `bash ~/hermes-9i/termux/fast-mirrors.sh` (tests mirrors, locks fastest; `--restore` undoes it) |
+| `npm install` slow | normal once (~100MB Next.js app) — stay on Wi-Fi; flags `--no-audit --no-fund` already skip extras |
+| `pip install` building from source | installer now uses `--prefer-binary`; if it still compiles, your mirror is stale — rerun fast-mirrors |
 | Battery kills loop | Unrestricted battery, `termux-wake-lock`, keep device charging |

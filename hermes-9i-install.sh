@@ -13,6 +13,9 @@ export DEBIAN_FRONTEND=noninteractive
 termux-wake-lock 2>/dev/null || true
 
 say "Realme 9i / 4GB optimized install — native Termux (no proot, no Ollama heavy)"
+# fastest mirror first: slow pkg downloads are almost always a bad mirror pick
+HERE="$(cd "$(dirname "$0")" 2>/dev/null && pwd || echo $HOME)"
+[ -f "$HERE/termux/fast-mirrors.sh" ] && bash "$HERE/termux/fast-mirrors.sh" || true
 pkg update -y
 # minimal deps only: 4GB RAM cannot afford rust+clang full chain unless needed
 pkg install -y python git curl termux-api jq openssh 2>&1 | tail -5
@@ -47,8 +50,8 @@ python -m pip install --upgrade pip setuptools wheel
 export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk 2>/dev/null || echo 33)"
 say "ANDROID_API_LEVEL=$ANDROID_API_LEVEL"
 
-# termux extra only — NOT [all] (too heavy for 4GB)
-python -m pip install -e '.[termux]' -c constraints-termux.txt
+# termux extra only — NOT [all] (too heavy for 4GB). prefer-binary skips slow source builds.
+python -m pip install --prefer-binary -e '.[termux]' -c constraints-termux.txt
 
 ln -sf "$HOME/hermes-agent/venv/bin/hermes" "$PREFIX/bin/hermes" || true
 

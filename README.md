@@ -48,6 +48,7 @@ Two sessions is the whole design. Session 1 serves free models on localhost. Ses
 | Tasks | `jarvis/tasks.md` | The inbox. Hermes picks one item per cycle. |
 | Hermes config | `jarvis/hermes-config.yaml` | Merge into `~/.hermes/config.yaml`. `provider: custom` matters. |
 | Boot | `termux/boot-autostart.sh` | Reinstalls the loop and router after reboot with Termux:Boot. |
+| Fast mirrors | `termux/fast-mirrors.sh` | Speed-tests mirrors (4 India + SG + EU + Cloudflare), locks the fastest. Fixes slow `pkg`. |
 | Old scripts | `legacy/` | Earlier installers, kept for reference. They need more RAM than the 9i has. |
 
 ## Constraints this repo is built around

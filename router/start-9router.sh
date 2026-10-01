@@ -5,8 +5,8 @@
 set -euo pipefail
 command -v node >/dev/null 2>&1 || { echo "node missing -> pkg install -y nodejs"; exit 1; }
 if ! command -v 9router >/dev/null 2>&1; then
-  echo "installing 9router (once)..."
-  npm install -g 9router
+  echo "installing 9router (once, ~1-2 min on good wifi)..."
+  npm install -g --no-audit --no-fund 9router
 fi
 export PORT="${PORT:-20128}"
 export NODE_OPTIONS="${NODE_OPTIONS:---dns-result-order=ipv4first}"   # Termux IPv4 DNS fix
