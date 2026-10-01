@@ -13,6 +13,7 @@ if [ -z "${OPENROUTER_API_KEY:-}" ]; then
   fi
 fi
 export ROUTER_PORT="${ROUTER_PORT:-4000}"
+export NODE_OPTIONS="${NODE_OPTIONS:---dns-result-order=ipv4first}"   # Termux IPv4 DNS fix
 termux-wake-lock 2>/dev/null || true
 echo "[9router] http://127.0.0.1:$ROUTER_PORT/v1  -> Hermes provider: custom"
 python3 hermes-9i-router.py

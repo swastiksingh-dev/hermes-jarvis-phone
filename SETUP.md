@@ -66,6 +66,16 @@ bash ~/hermes-9i/phone/phone-actions.sh screenshot ./shot.png
 
 Email = open Gmail app + screenshot + summarize. No app-passwords.
 Apps = `play <pkg>` intent + screenshot, `download <url>` + `install_apk`.
+Grounded control = `ui_dump` lists on-screen text with bounds, `tap_text "<label>"`
+taps the center of the match. Rules in `jarvis/phone-rules.md`: dump before
+every tap, re-dump after, scroll-and-retry max 3, never stop after one launch.
+Raw `shell` runs any adb command but refuses destructive patterns (`rm -rf /`,
+`mkfs`, `dd if=`, fork bombs). Shizuku acting up? `shizuku-bridge.sh --repair`
+prints the exact fix (storage perm, dex export, Start).
+
+Optional: Telegram as a remote inbox. Create a bot with `@BotFather`, save the
+token to `~/.hermes-9i-tg-token`, run `phone/telegram-watch.sh` in its own
+session. Messages land in `tasks.md` for the next loop cycle.
 
 ## 6. Jarvis loop (always-on)
 

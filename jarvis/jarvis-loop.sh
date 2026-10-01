@@ -16,7 +16,7 @@ once(){
   BAT="$(termux-battery-status 2>/dev/null | tr -d '\n' | cut -c1-200 || echo no-api)"
   case "$BAT" in *'"percentage": 1'[0-9]*|*'"percentage": [0-9]'*) echo "battery low, memory-only cycle" | tee -a "$LOG"; $MEM remember "low-battery cycle $(date +%F_%T)" 2>/dev/null || true; return 0;; esac
   # 3. build prompt for hermes (uses local 9router endpoint)
-  PROMPT="You are Jarvis on Realme 9i (4GB, no-root). Context memory: $CTX. Battery: $BAT. Do ONE small task from ~/hermes-9i/jarvis/tasks.md inbox, using phone/phone-actions.sh for phone control. Keep output <30 lines. Remember key facts via: python3 ~/hermes-9i/jarvis/memory.py remember \"fact\"."
+  PROMPT="You are Jarvis on Realme 9i (4GB, no-root). Context memory: $CTX. Battery: $BAT. Do ONE small task from ~/hermes-9i/jarvis/tasks.md inbox, using phone/phone-actions.sh for phone control. Screen tasks must follow ~/hermes-9i/jarvis/phone-rules.md (ui_dump before taps, re-dump after). Keep output <30 lines. Remember key facts via: python3 ~/hermes-9i/jarvis/memory.py remember \"fact\"."
   if command -v hermes >/dev/null 2>&1; then
     timeout 600 hermes "$PROMPT" 2>&1 | tee -a "$LOG" | tail -30
     $MEM remember "cycle $(date +%F_%T) done" 2>/dev/null || true

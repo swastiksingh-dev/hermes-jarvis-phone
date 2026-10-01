@@ -10,6 +10,7 @@
 # After reboot just repeat step 4 (Start), no re-pair needed.
 set -uo pipefail
 RISH="${RISH:-rish}"
+SDIR="$(cd "$(dirname "$0")" 2>/dev/null && pwd || echo .)"
 
 has_rish(){ command -v rish >/dev/null 2>&1; }
 adb_shell(){
@@ -49,13 +50,31 @@ case "${1:-}" in
   --dnd) adb_shell "cmd notification set_dnd ${2:-off}" ;;                                     # off|priority|alarms|total
   --wifi-info) adb_shell "dumpsys wifi | grep -m5 -i 'mWifiInfo\|SSID\|RSSI'" ;;
   --app-list) adb_shell "pm list packages -3 | head -n ${2:-50}" ;;                            # third-party apps
-  *) cat <<'H'
+  --ui-dump) out="${2:-./ui_dump.txt}"; adb_shell "uiautomator dump /sdcard/window_dump.xml" >/dev/null; cp /sdcard/window_dump.xml /tmp/hermes_window_dump.xml 2>/dev/null || cp /sdcard/window_dump.xml ./window_dump.xml; XML=/tmp/hermes_window_dump.xml; [ -f "$XML" ] || XML=./window_dump.xml; python3 "$SDIR/ui_parse.py" "$XML" | tee "$out" ;;
+  --shell) shift; case "$*" in *'rm -rf /'*|*'rm -rf ~'*|*'rm -rf /sdcard'*|*mkfs*|*'dd if='*|*':(){'*) echo "refused: destructive pattern" >&2; exit 1;; esac; adb_shell "$*" ;;
+  --youtube) q="$(echo "${2:-}" | sed 's/ /+/g')"; adb_shell "am start -a android.intent.action.VIEW -d 'https://www.youtube.com/results?search_query=$q' com.google.android.youtube" ;;
+  --recent) adb_shell "input keyevent 187" ;;
+  --screenon) adb_shell "input keyevent 224" ;;
+  --volkey) adb_shell "input keyevent $2" ;;                                                 # 24 up 25 down 164 mute
+  --kill-app) adb_shell "am force-stop $2" ;;
+  --whatsapp) num="$2"; txt="$(echo "${*:3}" | sed 's/ /%20/g')"; adb_shell "am start -a android.intent.action.VIEW -d 'https://wa.me/$num?text=$txt'" ;;
+  --device-info) adb_shell "getprop ro.product.model; getprop ro.build.version.release; dumpsys battery | grep -m2 'level\|status'" ;;
+  --repair)
+    echo "== shizuku self-check (no-root) =="
+    [ -d ~/storage ] && echo "storage: OK" || { echo "storage: MISSING -> run termux-setup-storage"; }
+    for d in ~/storage/shared/Shizuku /sdcard/Shizuku; do [ -f "$d/rish_shizuku.dex" ] && echo "dex: OK ($d)" && DEX_OK=1; done
+    [ "${DEX_OK:-0}" = 1 ] || echo "dex: MISSING -> Shizuku app > 'Use Shizuku in terminal apps' > Export files"
+    command -v rish >/dev/null && echo "rish: OK" || echo "rish: MISSING -> restart Termux after Export"
+    adb_shell "echo adb_ok" && echo "adb shell: OK" || echo "adb shell: FAIL -> Shizuku app > Start (Wireless debugging must stay ON)"
+    ;;  *) cat <<'H'
 usage: shizuku-bridge.sh --check | --launch PKG | --open-url URL | --intent AM_ARGS
   --screenshot [out] | --notif-dump [lines] | --wifi enable|disable | --bt enable|disable
   --volume STREAM LVL | --input-text TXT | --tap X Y | --swipe X1 Y1 X2 Y2 | --key CODE
   --install-apk PATH | --gmail-open | --play-open PKG
   --brightness 0-255 | --lock | --wake | --media 85 | --airplane 0|1 | --dnd off|priority
-  --wifi-info | --app-list [n]
+  --wifi-info | --app-list [n] | --ui-dump [out] | --shell CMD | --youtube QUERY
+  --recent | --screenon | --volkey 24|25|164 | --kill-app PKG | --whatsapp NUM [text]
+  --device-info | --repair
 H
 ;;
 esac
