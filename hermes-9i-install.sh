@@ -51,7 +51,13 @@ export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk 2>/dev/null || echo 33)
 say "ANDROID_API_LEVEL=$ANDROID_API_LEVEL"
 
 # termux extra only — NOT [all] (too heavy for 4GB). prefer-binary skips slow source builds.
-python -m pip install --prefer-binary -e '.[termux]' -c constraints-termux.txt
+# NOTE: upstream has no constraints-termux.txt (verified 2026-10-01), so only
+# use -c when the file actually exists.
+if [ -f constraints-termux.txt ]; then
+  python -m pip install --prefer-binary -e '.[termux]' -c constraints-termux.txt
+else
+  python -m pip install --prefer-binary -e '.[termux]'
+fi
 
 ln -sf "$HOME/hermes-agent/venv/bin/hermes" "$PREFIX/bin/hermes" || true
 
