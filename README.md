@@ -39,8 +39,9 @@ Two sessions is the whole design. Session 1 serves free models on localhost. Ses
 | Router | `router/hermes-9i-router.py` | Stdlib-only proxy at `127.0.0.1:4000`. Tries your `:free` list in order when OpenRouter rate-limits. |
 | Router config | `router/models.txt` | Fallback chain. Line 1 is primary. |
 | Phone bridge | `phone/shizuku-bridge.sh` | `rish`/`adb` wrapper. Works with Shizuku over wireless debugging, no root. |
-| Phone actions | `phone/phone-actions.sh` | 30 actions Hermes can call: gmail, play store, tap, sms, screenshot, and the rest. |
+| Phone actions | `phone/phone-actions.sh` | 40 actions Hermes can call: gmail, play store, tap, sms, screenshot, brightness, lock, media, airplane, dnd, and the rest. |
 | Loop | `jarvis/jarvis-loop.sh` | Runs one small task every 5 minutes. Skips heavy work under 20% battery. |
+| Health | `jarvis/status.sh` | One-glance check: router, hermes, phone bridge, memory, logs. |
 | Memory | `jarvis/memory.py` | SQLite notes, capped at 5000 rows so it stays under 100MB. |
 | Tasks | `jarvis/tasks.md` | The inbox. Hermes picks one item per cycle. |
 | Hermes config | `jarvis/hermes-config.yaml` | Merge into `~/.hermes/config.yaml`. `provider: custom` matters. |

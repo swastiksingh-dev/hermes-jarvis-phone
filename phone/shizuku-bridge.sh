@@ -41,11 +41,21 @@ case "${1:-}" in
   --install-apk) adb_shell "pm install -r '$2'" ;;
   --gmail-open) adb_shell "am start -n com.google.android.gm/.ConversationListActivityGmail" ;;
   --play-open) shift; adb_shell "am start -a android.intent.action.VIEW -d 'market://details?id=$1'" ;;
+  --brightness) adb_shell "settings put system screen_brightness ${2:-120}" ;;                 # 0-255
+  --lock) adb_shell "input keyevent 26" ;;
+  --wake) adb_shell "input keyevent 224" ;;
+  --media) adb_shell "input keyevent ${2:-85}" ;;                                              # 85 play/pause 87 next 88 prev
+  --airplane) adb_shell "settings put global airplane_mode_on ${2:-0}; am broadcast -a android.intent.action.AIRPLANE_MODE --ez state ${2:-false} >/dev/null" ;;
+  --dnd) adb_shell "cmd notification set_dnd ${2:-off}" ;;                                     # off|priority|alarms|total
+  --wifi-info) adb_shell "dumpsys wifi | grep -m5 -i 'mWifiInfo\|SSID\|RSSI'" ;;
+  --app-list) adb_shell "pm list packages -3 | head -n ${2:-50}" ;;                            # third-party apps
   *) cat <<'H'
 usage: shizuku-bridge.sh --check | --launch PKG | --open-url URL | --intent AM_ARGS
   --screenshot [out] | --notif-dump [lines] | --wifi enable|disable | --bt enable|disable
   --volume STREAM LVL | --input-text TXT | --tap X Y | --swipe X1 Y1 X2 Y2 | --key CODE
   --install-apk PATH | --gmail-open | --play-open PKG
+  --brightness 0-255 | --lock | --wake | --media 85 | --airplane 0|1 | --dnd off|priority
+  --wifi-info | --app-list [n]
 H
 ;;
 esac

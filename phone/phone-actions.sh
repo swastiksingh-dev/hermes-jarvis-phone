@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# 30 phone actions Hermes can call:  phone-actions.sh <name> [args]
+# 40 phone actions Hermes can call:  phone-actions.sh <name> [args]
 # Each maps to shizuku-bridge.sh + termux-api. Human-like control, no root.
 set -uo pipefail
 B="$(dirname "$0")/shizuku-bridge.sh"
@@ -31,5 +31,13 @@ case "$a" in
   download) termux-download "$1";;                                              # download URL
   share) termux-share "$1";;
   clipboard_get) termux-clipboard-get;; clipboard_set) termux-clipboard-set "$1";;
-  *) echo "actions: wifi_on wifi_off bt_on bt_off torch_on torch_off volume_up volume_down screenshot notify vibrate tts battery location contacts sms_inbox sms_send call open_url gmail play launch tap swipe key_home key_back key_power type install_apk download share clipboard_get clipboard_set";;
+  brightness) bash "$B" --brightness "${1:-120}";;                               # 0-255
+  lock) bash "$B" --lock;; wake) bash "$B" --wake;;
+  media) bash "$B" --media "${1:-85}";;                                          # 85 toggle 87 next 88 prev
+  airplane_on) bash "$B" --airplane 1;; airplane_off) bash "$B" --airplane 0;;
+  dnd) bash "$B" --dnd "${1:-off}";;
+  wifi_info) bash "$B" --wifi-info;;
+  app_list) bash "$B" --app-list "${1:-50}";;
+  notif_dump) bash "$B" --notif-dump "${1:-60}";;
+  *) echo "actions: wifi_on wifi_off bt_on bt_off torch_on torch_off volume_up volume_down screenshot notify vibrate tts battery location contacts sms_inbox sms_send call open_url gmail play launch tap swipe key_home key_back key_power type install_apk download share clipboard_get clipboard_set brightness lock wake media airplane_on airplane_off dnd wifi_info app_list notif_dump";;
 esac
