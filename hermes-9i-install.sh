@@ -71,13 +71,23 @@ if [ "$HERMES_OK" = 0 ]; then
   python -m pip install --upgrade pip setuptools wheel
   export ANDROID_API_LEVEL="$(getprop ro.build.version.sdk 2>/dev/null || echo 33)"
   say "ANDROID_API_LEVEL=$ANDROID_API_LEVEL"
+  # 4GB phone: single-job Rust/C builds. Parallel cargo jobs race with
+  # ETXTBSY (Text file busy) and OOM-kill rustc on Android. TMPDIR under
+  # HOME avoids tmp-execution quirks.
+  export CARGO_BUILD_JOBS=1 MAKEFLAGS="-j1" CARGO_NET_RETRY=10
+  export TMPDIR="$HOME/.pip-tmp" && mkdir -p "$TMPDIR"
   # termux extra only — NOT [all] (too heavy for 4GB). upstream has no
-  # constraints-termux.txt, use -c only if the file exists.
-  if [ -f constraints-termux.txt ]; then
-    python -m pip install --prefer-binary -e '.[termux]' -c constraints-termux.txt && HERMES_OK=1
-  else
-    python -m pip install --prefer-binary -e '.[termux]' && HERMES_OK=1
-  fi
+  # constraints-termux.txt, use -c only if the file exists. One retry:
+  # transient build flakes are common on-device.
+  pip_termux(){
+    if [ -f constraints-termux.txt ]; then
+      python -m pip install --prefer-binary -e '.[termux]' -c constraints-termux.txt
+    else
+      python -m pip install --prefer-binary -e '.[termux]'
+    fi
+  }
+  pip_termux || { warn "first pip attempt failed — retrying once"; pip_termux; }
+  [ -x venv/bin/hermes ] && HERMES_OK=1
   [ "$HERMES_OK" = 1 ] && ln -sf "$HOME/hermes-agent/venv/bin/hermes" "$PREFIX/bin/hermes" || true
   deactivate 2>/dev/null || true
 fi
