@@ -24,10 +24,13 @@
 curl -fsSL https://raw.githubusercontent.com/swastiksingh-dev/hermes-jarvis-phone/main/hermes-9i-install.sh | bash
 ```
 
-What it does: `pkg` minimal set, Python 3.13 psutil patch, shallow clone
-`NousResearch/hermes-agent`, `venv`, `pip install -e '.[termux]'`, symlink
-`hermes`, copy `router/ phone/ jarvis/ termux/` to `~/hermes-9i/`.
-It does **not** install proot-Ubuntu or Ollama (both OOM on 4GB).
+What it does: fastest mirror first, then the **official Hermes APT package**
+(prebuilt — the phone compiles nothing), with a pip fallback that installs
+the Rust toolchain for maturin builds. Then it copies `router/ phone/
+jarvis/ termux/` to `~/hermes-9i/`. No proot-Ubuntu or Ollama (both OOM on 4GB).
+Upstream flags the APT package as occasionally broken — if `hermes` is still
+missing after install, the pip fallback in the same script covers it; rerun
+the installer and read the last lines.
 
 ## 3. 9Router — Session 1 (new Termux session, swipe right → New session)
 
@@ -102,5 +105,6 @@ CYCLE_MIN=10 bash ~/hermes-9i/jarvis/jarvis-loop.sh
 | Play Store Termux errors | uninstall, reinstall from F-Droid |
 | `pkg` slow or stuck | run `bash ~/hermes-9i/termux/fast-mirrors.sh` (tests mirrors, locks fastest; `--restore` undoes it) |
 | `npm install` slow | normal once (~100MB Next.js app) — stay on Wi-Fi; flags `--no-audit --no-fund` already skip extras |
-| `pip install` building from source | installer now uses `--prefer-binary`; if it still compiles, your mirror is stale — rerun fast-mirrors |
+| `pip install` building from source | installer now uses `--prefer-binary` plus Termux `rust`; maturin failures mean the Rust toolchain step was skipped — rerun the installer |
+| `constraints-termux.txt` missing | expected — upstream removed it; installer uses plain `.[termux]` automatically |
 | Battery kills loop | Unrestricted battery, `termux-wake-lock`, keep device charging |
